@@ -34,7 +34,7 @@
       align-items:center;
       justify-content:space-between;
       background:var(--brand-header-bg);
-      max-width:1500px;
+      max-width:1700px;
       margin:6px auto 18px;
       height:104px;
       padding:0 18px;
@@ -61,7 +61,7 @@
     }
 
     .page-shell{
-      max-width:1500px;
+      max-width:1700px;
       margin:0 auto;
     }
 
@@ -69,12 +69,12 @@
       background:linear-gradient(180deg,#ffffff 0%,#f9fbfd 100%);
       border-radius:16px;
       box-shadow:0 4px 12px rgba(0,0,0,.06);
-      padding:20px 22px;
+      padding:18px 20px;
       margin-bottom:16px;
     }
 
     .hero h1{
-      font-size:32px;
+      font-size:30px;
       line-height:1.1;
       color:var(--brand);
       margin:0 0 8px;
@@ -91,7 +91,7 @@
     .section-row{
       display:grid;
       gap:16px;
-      grid-template-columns: 0.82fr 1.18fr;
+      grid-template-columns: 620px minmax(0, 1fr);
       align-items:start;
     }
 
@@ -118,10 +118,11 @@
     table{
       width:100%;
       border-collapse:collapse;
+      table-layout:fixed;
     }
 
     th,td{
-      padding:7px 6px;
+      padding:6px 5px;
       border-bottom:1px solid #eee;
       vertical-align:middle;
       font-size:13px;
@@ -140,7 +141,7 @@
 
     td:nth-child(1),
     th:nth-child(1){
-      width:52px;
+      width:48px;
     }
 
     td:nth-child(2),
@@ -150,17 +151,16 @@
 
     td:nth-child(3),
     th:nth-child(3){
-      width:95px;
+      width:92px;
       text-align:right;
     }
 
     select{
       width:100%;
-      min-width:340px;
-      padding:10px 14px;
-      border-radius:12px;
+      padding:9px 10px;
+      border-radius:11px;
       border:1px solid #d7dde5;
-      font-size:15px;
+      font-size:14px;
       font-family:inherit;
       outline:none;
       background:#fff;
@@ -173,11 +173,11 @@
     }
 
     input[type="number"]{
-      width:88px;
-      padding:10px 12px;
-      border-radius:12px;
+      width:82px;
+      padding:9px 10px;
+      border-radius:11px;
       border:1px solid #d7dde5;
-      font-size:15px;
+      font-size:14px;
       text-align:center;
       font-family:inherit;
       outline:none;
@@ -193,11 +193,11 @@
       background:#dfe6f1;
       color:var(--brand);
       box-shadow:none;
-      padding:8px 11px;
+      padding:7px 10px;
       border-radius:10px;
-      font-size:14px;
+      font-size:13px;
       font-weight:800;
-      min-width:38px;
+      min-width:34px;
     }
 
     .btnrow{
@@ -223,16 +223,20 @@
     button.secondary{ background:var(--brand-muted); }
     button.danger{ background:#7b2222; }
 
+    .chart-card{
+      overflow:hidden;
+    }
+
     .chartBox{
-      height:860px;
-      padding:4px;
+      height:920px;
+      padding:0;
     }
 
     .summary{
       display:grid;
       grid-template-columns:repeat(3,1fr);
       gap:12px;
-      margin-bottom:14px;
+      margin-bottom:10px;
     }
 
     .summary-card{
@@ -240,6 +244,7 @@
       background:#fbfdff;
       border-radius:12px;
       padding:12px;
+      min-height:86px;
     }
 
     .summary-card .label{
@@ -252,7 +257,7 @@
     }
 
     .summary-card .value{
-      font-size:20px;
+      font-size:19px;
       font-weight:800;
       color:var(--brand);
       line-height:1.15;
@@ -265,7 +270,7 @@
       line-height:1.35;
     }
 
-    @media (max-width:1180px){
+    @media (max-width:1280px){
       .section-row{
         grid-template-columns:1fr;
       }
@@ -273,13 +278,13 @@
       .chartBox{
         height:760px;
       }
-
-      select{
-        min-width:0;
-      }
     }
 
     @media (max-width:900px){
+      body{
+        padding:14px;
+      }
+
       .brand-right{ display:none; }
 
       .brand-header{
@@ -296,7 +301,12 @@
       }
 
       select{
-        font-size:14px;
+        font-size:13px;
+        padding:8px;
+      }
+
+      input[type="number"]{
+        width:72px;
       }
     }
 
@@ -390,7 +400,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card chart-card">
         <h2>Leadership Competency Wheel</h2>
 
         <p class="sub">
@@ -424,7 +434,7 @@
 <script>
 (() => {
 
-  const LS_KEY = "wheel_of_leadership_competencies_v4";
+  const LS_KEY = "wheel_of_leadership_competencies_v5";
 
   const COMPETENCIES = [
     "Cultivating High-Performing Teams",
@@ -621,7 +631,7 @@
       maintainAspectRatio: false,
 
       layout: {
-        padding: 42
+        padding: 20
       },
 
       scales: {
@@ -634,7 +644,7 @@
             stepSize: 1,
             backdropColor: "transparent",
             color: "#5E6F86",
-            padding: 16,
+            padding: 12,
             z: 1,
 
             font: {
@@ -654,7 +664,7 @@
 
           pointLabels: {
             color: "#28456A",
-            padding: 28,
+            padding: 20,
             centerPointLabels: false,
 
             font: {

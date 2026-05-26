@@ -19,11 +19,13 @@
       --border:#e6edf5;
     }
 
-    *{ box-sizing:border-box; }
+    *{
+      box-sizing:border-box;
+    }
 
     body{
       margin:0;
-      font-family: Calibri, "Segoe UI", Arial, sans-serif;
+      font-family:Calibri, "Segoe UI", Arial, sans-serif;
       background:var(--bg);
       color:var(--text);
       padding:22px;
@@ -91,7 +93,7 @@
     .section-row{
       display:grid;
       gap:16px;
-      grid-template-columns: 620px minmax(0, 1fr);
+      grid-template-columns: 540px minmax(0, 1fr);
       align-items:start;
     }
 
@@ -137,11 +139,13 @@
       padding:10px 8px;
     }
 
-    th{text-align:left;}
+    th{
+      text-align:left;
+    }
 
     td:nth-child(1),
     th:nth-child(1){
-      width:48px;
+      width:42px;
     }
 
     td:nth-child(2),
@@ -151,16 +155,16 @@
 
     td:nth-child(3),
     th:nth-child(3){
-      width:92px;
+      width:76px;
       text-align:right;
     }
 
     select{
       width:100%;
-      padding:9px 10px;
-      border-radius:11px;
+      padding:8px 8px;
+      border-radius:10px;
       border:1px solid #d7dde5;
-      font-size:14px;
+      font-size:13px;
       font-family:inherit;
       outline:none;
       background:#fff;
@@ -173,11 +177,11 @@
     }
 
     input[type="number"]{
-      width:82px;
-      padding:9px 10px;
-      border-radius:11px;
+      width:68px;
+      padding:8px 8px;
+      border-radius:10px;
       border:1px solid #d7dde5;
-      font-size:14px;
+      font-size:13px;
       text-align:center;
       font-family:inherit;
       outline:none;
@@ -193,11 +197,11 @@
       background:#dfe6f1;
       color:var(--brand);
       box-shadow:none;
-      padding:7px 10px;
+      padding:6px 9px;
       border-radius:10px;
       font-size:13px;
       font-weight:800;
-      min-width:34px;
+      min-width:32px;
     }
 
     .btnrow{
@@ -220,15 +224,20 @@
       font-size:13px;
     }
 
-    button.secondary{ background:var(--brand-muted); }
-    button.danger{ background:#7b2222; }
+    button.secondary{
+      background:var(--brand-muted);
+    }
+
+    button.danger{
+      background:#7b2222;
+    }
 
     .chart-card{
       overflow:hidden;
     }
 
     .chartBox{
-      height:920px;
+      height:980px;
       padding:0;
     }
 
@@ -271,6 +280,7 @@
     }
 
     @media (max-width:1280px){
+
       .section-row{
         grid-template-columns:1fr;
       }
@@ -278,14 +288,18 @@
       .chartBox{
         height:760px;
       }
+
     }
 
     @media (max-width:900px){
+
       body{
         padding:14px;
       }
 
-      .brand-right{ display:none; }
+      .brand-right{
+        display:none;
+      }
 
       .brand-header{
         height:88px;
@@ -300,17 +314,10 @@
         grid-template-columns:1fr;
       }
 
-      select{
-        font-size:13px;
-        padding:8px;
-      }
-
-      input[type="number"]{
-        width:72px;
-      }
     }
 
     @media print{
+
       body{
         background:#fff;
         padding:0;
@@ -345,21 +352,28 @@
       .chartBox{
         height:170mm;
       }
+
     }
   </style>
 </head>
 
 <body>
+
   <div class="brand-header">
     <div>
       <img src="rl-logo-white.png" alt="Robertson Lowstuter" class="brand-logo-img" />
     </div>
-    <div class="brand-right">“Create Uncommon Results!®”</div>
+
+    <div class="brand-right">
+      “Create Uncommon Results!®”
+    </div>
   </div>
 
   <div class="page-shell">
+
     <div class="hero">
       <h1>Wheel of Leadership Competencies</h1>
+
       <p>
         Use this tool to rate leadership effectiveness across core competency areas.
         The center of the wheel represents 1 = Low Effectiveness, and the outer edge represents 10 = High Effectiveness.
@@ -367,7 +381,9 @@
     </div>
 
     <div class="section-row">
+
       <div class="card">
+
         <h2>Enter Competency Ratings</h2>
 
         <p class="sub">
@@ -376,6 +392,7 @@
         </p>
 
         <table>
+
           <thead>
             <tr>
               <th></th>
@@ -385,6 +402,7 @@
           </thead>
 
           <tbody id="scoreRows"></tbody>
+
         </table>
 
         <div class="btnrow">
@@ -398,9 +416,11 @@
           Scores are saved in this browser automatically.
           Use Reset to clear all values.
         </div>
+
       </div>
 
       <div class="card chart-card">
+
         <h2>Leadership Competency Wheel</h2>
 
         <p class="sub">
@@ -408,6 +428,7 @@
         </p>
 
         <div class="summary">
+
           <div class="summary-card">
             <div class="label">Average Score</div>
             <div class="value" id="avgScore">—</div>
@@ -422,19 +443,23 @@
             <div class="label">Lowest Area</div>
             <div class="value" id="lowScore">—</div>
           </div>
+
         </div>
 
         <div class="chartBox">
           <canvas id="wheelChart"></canvas>
         </div>
+
       </div>
+
     </div>
+
   </div>
 
 <script>
 (() => {
 
-  const LS_KEY = "wheel_of_leadership_competencies_v5";
+  const LS_KEY = "wheel_of_leadership_competencies_v6";
 
   const COMPETENCIES = [
     "Cultivating High-Performing Teams",
@@ -466,27 +491,34 @@
   const resetBtn = document.getElementById("resetBtn");
 
   function loadState(){
+
     try{
       return JSON.parse(localStorage.getItem(LS_KEY)) || null;
     } catch {
       return null;
     }
+
   }
 
   function saveState(rows){
+
     localStorage.setItem(LS_KEY, JSON.stringify(rows));
+
   }
 
   let rows = loadState() || DEFAULT_ROWS.map(name => ({
-    competency: name,
-    score: ""
+    competency:name,
+    score:""
   }));
 
   function buildDropdown(selectedValue){
+
     const select = document.createElement("select");
 
     COMPETENCIES.forEach(name => {
+
       const option = document.createElement("option");
+
       option.value = name;
       option.textContent = name;
 
@@ -495,11 +527,13 @@
       }
 
       select.appendChild(option);
+
     });
 
     select.addEventListener("change", updateAll);
 
     return select;
+
   }
 
   function buildTable(){
@@ -519,9 +553,12 @@
       removeBtn.textContent = "×";
 
       removeBtn.addEventListener("click", () => {
+
         rows.splice(index, 1);
+
         buildTable();
         updateAll();
+
       });
 
       tdRemove.appendChild(removeBtn);
@@ -570,8 +607,8 @@
       if(Number.isNaN(value)){
 
         return {
-          competency: select.value,
-          score: ""
+          competency:select.value,
+          score:""
         };
 
       }
@@ -582,8 +619,8 @@
       input.value = value;
 
       return {
-        competency: select.value,
-        score: value
+        competency:select.value,
+        score:value
       };
 
     });
@@ -606,107 +643,109 @@
 
   const wheelChart = new Chart(ctx, {
 
-    type: "radar",
+    type:"radar",
 
-    data: {
-      labels: [],
-      datasets: [{
-        label: "Leadership Effectiveness",
-        data: [],
-        fill: true,
-        backgroundColor: "rgba(40, 69, 106, 0.18)",
-        borderColor: "#28456A",
-        borderWidth: 3,
-        pointBackgroundColor: "#7b2222",
-        pointBorderColor: "#ffffff",
-        pointBorderWidth: 2,
-        pointRadius: 5,
-        pointHoverRadius: 7
+    data:{
+      labels:[],
+      datasets:[{
+        label:"Leadership Effectiveness",
+        data:[],
+        fill:true,
+        backgroundColor:"rgba(40, 69, 106, 0.18)",
+        borderColor:"#28456A",
+        borderWidth:3,
+        pointBackgroundColor:"#7b2222",
+        pointBorderColor:"#ffffff",
+        pointBorderWidth:2,
+        pointRadius:5,
+        pointHoverRadius:7
       }]
     },
 
-    options: {
+    options:{
 
-      responsive: true,
-      maintainAspectRatio: false,
+      responsive:true,
+      maintainAspectRatio:false,
 
-      layout: {
-        padding: 20
+      layout:{
+        padding:10
       },
 
-      scales: {
-        r: {
-          min: 0,
-          max: 10,
-          beginAtZero: true,
+      scales:{
+        r:{
+          min:0,
+          max:10,
+          beginAtZero:true,
 
-          ticks: {
-            stepSize: 1,
-            backdropColor: "transparent",
-            color: "#5E6F86",
-            padding: 12,
-            z: 1,
+          ticks:{
+            stepSize:1,
+            backdropColor:"transparent",
+            color:"#5E6F86",
+            padding:10,
+            z:1,
 
-            font: {
-              family: "Calibri",
-              size: 11,
-              weight: "700"
+            font:{
+              family:"Calibri",
+              size:11,
+              weight:"700"
             }
           },
 
-          grid: {
-            color: "#dbe6f1"
+          grid:{
+            color:"#dbe6f1"
           },
 
-          angleLines: {
-            color: "#dbe6f1"
+          angleLines:{
+            color:"#dbe6f1"
           },
 
-          pointLabels: {
-            color: "#28456A",
-            padding: 20,
-            centerPointLabels: false,
+          pointLabels:{
+            color:"#28456A",
+            padding:18,
+            centerPointLabels:false,
 
-            font: {
-              family: "Calibri",
-              size: 14,
-              weight: "700"
+            font:{
+              family:"Calibri",
+              size:15,
+              weight:"700"
             }
           }
         }
       },
 
-      plugins: {
+      plugins:{
 
-        legend: {
-          display: false
+        legend:{
+          display:false
         },
 
-        datalabels: {
-          color: "#111",
+        datalabels:{
+          color:"#111",
 
-          font: {
-            family: "Calibri",
-            weight: "800",
-            size: 12
+          font:{
+            family:"Calibri",
+            weight:"800",
+            size:12
           },
 
-          formatter: value => value ? value : "",
+          formatter:value => value ? value : "",
 
-          anchor: "end",
-          align: "end",
-          offset: 8,
-          clamp: true
+          anchor:"end",
+          align:"end",
+          offset:8,
+          clamp:true
         },
 
-        tooltip: {
-          callbacks: {
-            label: context => `${context.label}: ${context.raw || "No score"}`
+        tooltip:{
+          callbacks:{
+            label:context => `${context.label}: ${context.raw || "No score"}`
           }
         }
 
       }
+
     }
+
   });
 
   function updateSummary(completed){
@@ -718,6 +757,7 @@
       lowScore.textContent = "—";
 
       return;
+
     }
 
     const total = completed.reduce((sum, row) => sum + Number(row.score), 0);
@@ -767,8 +807,8 @@
     rows = readRows();
 
     rows.push({
-      competency: "Other",
-      score: ""
+      competency:"Other",
+      score:""
     });
 
     buildTable();
@@ -831,8 +871,8 @@
     localStorage.removeItem(LS_KEY);
 
     rows = DEFAULT_ROWS.map(name => ({
-      competency: name,
-      score: ""
+      competency:name,
+      score:""
     }));
 
     buildTable();
@@ -847,5 +887,6 @@
 
 })();
 </script>
+
 </body>
 </html>

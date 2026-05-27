@@ -68,26 +68,26 @@
     }
 
     .hero{
-      background:linear-gradient(180deg,#ffffff 0%,#f9fbfd 100%);
+      background:#fff;
       border-radius:16px;
       box-shadow:0 4px 12px rgba(0,0,0,.06);
-      padding:18px 20px;
+      padding:22px 24px;
       margin-bottom:16px;
     }
 
     .hero h1{
-      font-size:30px;
+      font-size:34px;
       line-height:1.1;
       color:var(--brand);
-      margin:0 0 8px;
+      margin:0 0 10px;
     }
 
     .hero p{
       margin:0;
       color:var(--brand-muted);
-      font-size:15px;
+      font-size:16px;
       line-height:1.45;
-      max-width:980px;
+      max-width:none;
     }
 
     .section-row{
@@ -211,10 +211,6 @@
       font-size:13px;
     }
 
-    button.secondary{
-      background:var(--brand-muted);
-    }
-
     button.danger{
       background:#7b2222;
     }
@@ -318,8 +314,7 @@
       <h1>Wheel of Leadership Competencies</h1>
 
       <p>
-        Use this tool to rate leadership effectiveness across core competency areas.
-        The center of the wheel represents 1 = Low Effectiveness, and the outer edge represents 10 = High Effectiveness.
+        Rate leadership effectiveness across selected competency areas. The center of the wheel represents 1 = Low Effectiveness, and the outer edge represents 10 = High Effectiveness.
       </p>
     </div>
 
@@ -350,7 +345,6 @@
         <div class="btnrow">
           <button id="addRowBtn">Add Row</button>
           <button id="downloadBtn">Download Chart</button>
-          <button class="secondary" id="printBtn">Save as PDF</button>
           <button class="danger" id="resetBtn">Reset</button>
         </div>
 
@@ -400,7 +394,7 @@
 <script>
 (() => {
 
-  const LS_KEY = "wheel_of_leadership_competencies_v14";
+  const LS_KEY = "wheel_of_leadership_competencies_v15";
 
   const COMPETENCIES = [
     "Cultivating High-Performing Teams",
@@ -428,7 +422,6 @@
 
   const addRowBtn = document.getElementById("addRowBtn");
   const downloadBtn = document.getElementById("downloadBtn");
-  const printBtn = document.getElementById("printBtn");
   const resetBtn = document.getElementById("resetBtn");
 
   function loadState(){
@@ -818,10 +811,6 @@
   addRowBtn.addEventListener("click", addRow);
 
   downloadBtn.addEventListener("click", downloadChart);
-
-  printBtn.addEventListener("click", () => {
-    window.print();
-  });
 
   resetBtn.addEventListener("click", () => {
 

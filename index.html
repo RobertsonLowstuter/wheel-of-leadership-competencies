@@ -400,7 +400,7 @@
 <script>
 (() => {
 
-  const LS_KEY = "wheel_of_leadership_competencies_v13";
+  const LS_KEY = "wheel_of_leadership_competencies_v14";
 
   const COMPETENCIES = [
     "Cultivating High-Performing Teams",
@@ -601,7 +601,7 @@
       maintainAspectRatio:false,
 
       layout:{
-        padding:35
+        padding:60
       },
 
       scales:{
@@ -655,10 +655,22 @@
         datalabels:{
           color:"#111",
 
+          backgroundColor:"#ffffff",
+          borderColor:"#28456A",
+          borderWidth:1,
+          borderRadius:5,
+
+          padding:{
+            top:2,
+            bottom:2,
+            left:4,
+            right:4
+          },
+
           font:{
             family:"Calibri",
             weight:"900",
-            size:15
+            size:14
           },
 
           formatter:value => value ? value : "",
@@ -670,18 +682,21 @@
             const count = context.chart.data.labels.length;
             const index = context.dataIndex;
 
-            const angle = -90 + index * (360 / count);
+            const angle = (index / count) * 360;
 
-            if (angle >= -45 && angle <= 45) return "left";
-            if (angle > 45 && angle < 135) return "top";
-            if (angle >= 135 || angle <= -135) return "right";
+            if (angle >= 330 || angle < 30) return "bottom";
+            if (angle >= 30 && angle < 90) return "left";
+            if (angle >= 90 && angle < 150) return "left";
+            if (angle >= 150 && angle < 210) return "top";
+            if (angle >= 210 && angle < 270) return "right";
 
-            return "bottom";
+            return "right";
 
           },
 
-          offset:8,
-          clamp:true
+          offset:10,
+          clamp:false,
+          clip:false
         },
 
         tooltip:{

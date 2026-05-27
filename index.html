@@ -19,7 +19,9 @@
       --border:#e6edf5;
     }
 
-    *{ box-sizing:border-box; }
+    *{
+      box-sizing:border-box;
+    }
 
     body{
       margin:0;
@@ -139,10 +141,14 @@
       padding:10px 8px;
     }
 
-    th{text-align:left;}
+    th{
+      text-align:left;
+    }
 
     td:nth-child(1),
-    th:nth-child(1){ width:42px; }
+    th:nth-child(1){
+      width:42px;
+    }
 
     td:nth-child(3),
     th:nth-child(3){
@@ -205,8 +211,13 @@
       font-size:13px;
     }
 
-    button.secondary{ background:var(--brand-muted); }
-    button.danger{ background:#7b2222; }
+    button.secondary{
+      background:var(--brand-muted);
+    }
+
+    button.danger{
+      background:#7b2222;
+    }
 
     .chartBox{
       height:900px;
@@ -254,31 +265,58 @@
     }
 
     @media (max-width:1280px){
-      .section-row{ grid-template-columns:1fr; }
-      .chartBox{ height:760px; }
+      .section-row{
+        grid-template-columns:1fr;
+      }
+
+      .chartBox{
+        height:760px;
+      }
     }
 
     @media (max-width:900px){
-      body{ padding:14px; }
-      .brand-right{ display:none; }
-      .brand-header{ height:88px; }
-      .brand-logo-img{ height:62px; margin-left:8px; }
-      .summary{ grid-template-columns:1fr; }
+
+      body{
+        padding:14px;
+      }
+
+      .brand-right{
+        display:none;
+      }
+
+      .brand-header{
+        height:88px;
+      }
+
+      .brand-logo-img{
+        height:62px;
+        margin-left:8px;
+      }
+
+      .summary{
+        grid-template-columns:1fr;
+      }
     }
   </style>
 </head>
 
 <body>
+
   <div class="brand-header">
     <div>
       <img src="rl-logo-white.png" alt="Robertson Lowstuter" class="brand-logo-img" />
     </div>
-    <div class="brand-right">“Create Uncommon Results!®”</div>
+
+    <div class="brand-right">
+      “Create Uncommon Results!®”
+    </div>
   </div>
 
   <div class="page-shell">
+
     <div class="hero">
       <h1>Wheel of Leadership Competencies</h1>
+
       <p>
         Use this tool to rate leadership effectiveness across core competency areas.
         The center of the wheel represents 1 = Low Effectiveness, and the outer edge represents 10 = High Effectiveness.
@@ -286,13 +324,17 @@
     </div>
 
     <div class="section-row">
+
       <div class="card">
+
         <h2>Enter Competency Ratings</h2>
+
         <p class="sub">
           Select a leadership competency and enter a score from 1 to 10. The chart updates automatically.
         </p>
 
         <table>
+
           <thead>
             <tr>
               <th></th>
@@ -300,7 +342,9 @@
               <th>Score</th>
             </tr>
           </thead>
+
           <tbody id="scoreRows"></tbody>
+
         </table>
 
         <div class="btnrow">
@@ -313,39 +357,50 @@
         <div class="legendNote">
           Scores are saved in this browser automatically. Use Reset to clear all values.
         </div>
+
       </div>
 
       <div class="card chart-card">
+
         <h2>Leadership Competency Wheel</h2>
+
         <p class="sub">
           This wheel highlights relative strengths and development areas across the selected leadership competencies.
         </p>
 
         <div class="summary">
+
           <div class="summary-card">
             <div class="label">Average Score</div>
             <div class="value" id="avgScore">—</div>
           </div>
+
           <div class="summary-card">
             <div class="label">Highest Area</div>
             <div class="value" id="highScore">—</div>
           </div>
+
           <div class="summary-card">
             <div class="label">Lowest Area</div>
             <div class="value" id="lowScore">—</div>
           </div>
+
         </div>
 
         <div class="chartBox">
           <canvas id="wheelChart"></canvas>
         </div>
+
       </div>
+
     </div>
+
   </div>
 
 <script>
 (() => {
-  const LS_KEY = "wheel_of_leadership_competencies_v10";
+
+  const LS_KEY = "wheel_of_leadership_competencies_v11";
 
   const COMPETENCIES = [
     "Cultivating High-Performing Teams",
@@ -370,21 +425,26 @@
   const avgScore = document.getElementById("avgScore");
   const highScore = document.getElementById("highScore");
   const lowScore = document.getElementById("lowScore");
+
   const addRowBtn = document.getElementById("addRowBtn");
   const downloadBtn = document.getElementById("downloadBtn");
   const printBtn = document.getElementById("printBtn");
   const resetBtn = document.getElementById("resetBtn");
 
   function loadState(){
+
     try{
       return JSON.parse(localStorage.getItem(LS_KEY)) || null;
     } catch {
       return null;
     }
+
   }
 
   function saveState(rows){
+
     localStorage.setItem(LS_KEY, JSON.stringify(rows));
+
   }
 
   let rows = loadState() || DEFAULT_ROWS.map(name => ({
@@ -393,69 +453,101 @@
   }));
 
   function buildDropdown(selectedValue){
+
     const select = document.createElement("select");
 
     COMPETENCIES.forEach(name => {
+
       const option = document.createElement("option");
+
       option.value = name;
       option.textContent = name;
-      if(name === selectedValue) option.selected = true;
+
+      if(name === selectedValue){
+        option.selected = true;
+      }
+
       select.appendChild(option);
+
     });
 
     select.addEventListener("change", updateAll);
+
     return select;
+
   }
 
   function buildTable(){
+
     scoreRows.innerHTML = "";
 
     rows.forEach((row, index) => {
+
       const tr = document.createElement("tr");
 
       const tdRemove = document.createElement("td");
+
       const removeBtn = document.createElement("button");
+
       removeBtn.type = "button";
       removeBtn.className = "remove-row";
       removeBtn.textContent = "×";
 
       removeBtn.addEventListener("click", () => {
+
         rows.splice(index, 1);
+
         buildTable();
         updateAll();
+
       });
 
       tdRemove.appendChild(removeBtn);
 
       const tdCompetency = document.createElement("td");
+
       tdCompetency.appendChild(buildDropdown(row.competency));
 
       const tdScore = document.createElement("td");
+
       const input = document.createElement("input");
+
       input.type = "number";
       input.min = "1";
       input.max = "10";
       input.step = "0.1";
       input.value = row.score ?? "";
+
       input.addEventListener("input", updateAll);
 
       tdScore.appendChild(input);
+
       tr.appendChild(tdRemove);
       tr.appendChild(tdCompetency);
       tr.appendChild(tdScore);
 
       scoreRows.appendChild(tr);
+
     });
+
   }
 
   function readRows(){
+
     return Array.from(scoreRows.querySelectorAll("tr")).map(tr => {
+
       const select = tr.querySelector("select");
       const input = tr.querySelector("input");
+
       let value = parseFloat(input.value);
 
       if(Number.isNaN(value)){
-        return { competency:select.value, score:"" };
+
+        return {
+          competency:select.value,
+          score:""
+        };
+
       }
 
       if(value < 1) value = 1;
@@ -463,16 +555,23 @@
 
       input.value = value;
 
-      return { competency:select.value, score:value };
+      return {
+        competency:select.value,
+        score:value
+      };
+
     });
+
   }
 
   function completedRows(){
+
     return rows.filter(row =>
       row.score !== "" &&
       row.score !== null &&
       !Number.isNaN(Number(row.score))
     );
+
   }
 
   Chart.register(ChartDataLabels);
@@ -480,7 +579,9 @@
   const ctx = document.getElementById("wheelChart").getContext("2d");
 
   const wheelChart = new Chart(ctx, {
+
     type:"radar",
+
     data:{
       labels:[],
       datasets:[{
@@ -497,33 +598,49 @@
         pointHoverRadius:8
       }]
     },
+
     options:{
+
       responsive:true,
       maintainAspectRatio:false,
-      layout:{ padding:28 },
+
+      layout:{
+        padding:35
+      },
+
       scales:{
         r:{
           min:0,
           max:10,
           beginAtZero:true,
+
           ticks:{
             stepSize:1,
             backdropColor:"transparent",
             color:"#28456A",
             padding:10,
             z:1,
+
             font:{
               family:"Calibri",
               size:13,
               weight:"800"
             }
           },
-          grid:{ color:"#dbe6f1" },
-          angleLines:{ color:"#dbe6f1" },
+
+          grid:{
+            color:"#dbe6f1"
+          },
+
+          angleLines:{
+            color:"#dbe6f1"
+          },
+
           pointLabels:{
             color:"#28456A",
-            padding:16,
+            padding:20,
             centerPointLabels:false,
+
             font:{
               family:"Calibri",
               size:14,
@@ -532,92 +649,148 @@
           }
         }
       },
+
       plugins:{
-        legend:{ display:false },
+
+        legend:{
+          display:false
+        },
+
         datalabels:{
           color:"#111",
+
           font:{
             family:"Calibri",
             weight:"900",
             size:15
           },
+
           formatter:value => value ? value : "",
-          anchor:"end",
-          align:"end",
-          offset:10,
+
+          anchor:"center",
+          align:"center",
+          offset:0,
           clamp:true
         },
+
         tooltip:{
           callbacks:{
             label:context => `${context.label}: ${context.raw || "No score"}`
           }
         }
+
       }
+
     }
+
   });
 
   function updateSummary(completed){
+
     if(!completed.length){
+
       avgScore.textContent = "—";
       highScore.textContent = "—";
       lowScore.textContent = "—";
+
       return;
+
     }
 
     const total = completed.reduce((sum, row) => sum + Number(row.score), 0);
+
     const avg = total / completed.length;
-    const highest = completed.reduce((a, b) => Number(b.score) > Number(a.score) ? b : a);
-    const lowest = completed.reduce((a, b) => Number(b.score) < Number(a.score) ? b : a);
+
+    const highest = completed.reduce((a, b) =>
+      Number(b.score) > Number(a.score) ? b : a
+    );
+
+    const lowest = completed.reduce((a, b) =>
+      Number(b.score) < Number(a.score) ? b : a
+    );
 
     avgScore.textContent = avg.toFixed(1);
-    highScore.textContent = `${highest.competency} (${highest.score})`;
-    lowScore.textContent = `${lowest.competency} (${lowest.score})`;
+
+    highScore.textContent =
+      `${highest.competency} (${highest.score})`;
+
+    lowScore.textContent =
+      `${lowest.competency} (${lowest.score})`;
+
   }
 
   function updateAll(){
+
     rows = readRows();
+
     saveState(rows);
 
     const completed = completedRows();
 
-    wheelChart.data.labels = completed.map(row => row.competency);
-    wheelChart.data.datasets[0].data = completed.map(row => Number(row.score));
+    wheelChart.data.labels =
+      completed.map(row => row.competency);
+
+    wheelChart.data.datasets[0].data =
+      completed.map(row => Number(row.score));
+
     wheelChart.update();
 
     updateSummary(completed);
+
   }
 
   function addRow(){
+
     rows = readRows();
-    rows.push({ competency:"Other", score:"" });
+
+    rows.push({
+      competency:"Other",
+      score:""
+    });
+
     buildTable();
+
     updateAll();
+
   }
 
   function downloadChart(){
+
     const canvas = wheelChart.canvas;
 
     if(canvas.toBlob){
+
       canvas.toBlob(blob => {
+
         if(!blob) return;
 
         const url = URL.createObjectURL(blob);
+
         const a = document.createElement("a");
+
         a.href = url;
         a.download = "wheel-of-leadership-competencies.png";
 
         document.body.appendChild(a);
+
         a.click();
+
         a.remove();
 
         URL.revokeObjectURL(url);
+
       }, "image/png");
+
     } else {
+
       window.open(canvas.toDataURL("image/png"), "_blank");
+
     }
+
   }
 
   addRowBtn.addEventListener("click", addRow);
+
   downloadBtn.addEventListener("click", downloadChart);
 
   printBtn.addEventListener("click", () => {
@@ -625,6 +798,7 @@
   });
 
   resetBtn.addEventListener("click", () => {
+
     if(!confirm("Reset all competency scores?")) return;
 
     localStorage.removeItem(LS_KEY);
@@ -635,12 +809,17 @@
     }));
 
     buildTable();
+
     updateAll();
+
   });
 
   buildTable();
+
   updateAll();
+
 })();
 </script>
+
 </body>
 </html>

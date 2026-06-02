@@ -19,9 +19,7 @@
       --border:#e6edf5;
     }
 
-    *{
-      box-sizing:border-box;
-    }
+    *{ box-sizing:border-box; }
 
     body{
       margin:0;
@@ -90,6 +88,36 @@
       max-width:none;
     }
 
+    .client-row{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns:140px minmax(260px, 480px);
+      gap:12px;
+      align-items:center;
+    }
+
+    .client-row label{
+      color:var(--brand);
+      font-size:15px;
+      font-weight:800;
+    }
+
+    #clientName{
+      width:100%;
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid #d7dde5;
+      font-size:15px;
+      font-family:inherit;
+      outline:none;
+      font-weight:600;
+    }
+
+    #clientName:focus{
+      border-color:var(--brand);
+      box-shadow:0 0 0 3px rgba(40,69,106,.12);
+    }
+
     .section-row{
       display:grid;
       gap:16px;
@@ -141,9 +169,7 @@
       padding:10px 8px;
     }
 
-    th{
-      text-align:left;
-    }
+    th{text-align:left;}
 
     td:nth-child(1),
     th:nth-child(1){
@@ -211,6 +237,10 @@
       font-size:13px;
     }
 
+    button.secondary{
+      background:var(--brand-muted);
+    }
+
     button.danger{
       background:#7b2222;
     }
@@ -270,27 +300,22 @@
       }
     }
 
-    @media (max-width:900px){
-
+    @media print{
       body{
-        padding:14px;
+        background:#fff;
       }
 
-      .brand-right{
-        display:none;
+      .brand-header,
+      .btnrow,
+      .legendNote,
+      .remove-row{
+        display:none !important;
       }
 
-      .brand-header{
-        height:88px;
-      }
-
-      .brand-logo-img{
-        height:62px;
-        margin-left:8px;
-      }
-
-      .summary{
-        grid-template-columns:1fr;
+      .card,
+      .hero{
+        box-shadow:none;
+        border:1px solid #e6e6e6;
       }
     }
   </style>
@@ -303,9 +328,7 @@
       <img src="rl-logo-white.png" alt="Robertson Lowstuter" class="brand-logo-img" />
     </div>
 
-    <div class="brand-right">
-      “Create Uncommon Results!®”
-    </div>
+    <div class="brand-right">“Create Uncommon Results!®”</div>
   </div>
 
   <div class="page-shell">
@@ -316,6 +339,11 @@
       <p>
         Rate leadership effectiveness across selected competency areas. The center of the wheel represents 1 = Low Effectiveness, and the outer edge represents 10 = High Effectiveness.
       </p>
+
+      <div class="client-row">
+        <label for="clientName">Client Name</label>
+        <input type="text" id="clientName" placeholder="Enter client name" />
+      </div>
     </div>
 
     <div class="section-row">
@@ -329,7 +357,6 @@
         </p>
 
         <table>
-
           <thead>
             <tr>
               <th></th>
@@ -339,17 +366,17 @@
           </thead>
 
           <tbody id="scoreRows"></tbody>
-
         </table>
 
         <div class="btnrow">
           <button id="addRowBtn">Add Row</button>
           <button id="downloadBtn">Download Chart</button>
+          <button class="secondary" id="pdfBtn">Print / Save as PDF</button>
           <button class="danger" id="resetBtn">Reset</button>
         </div>
 
         <div class="legendNote">
-          Scores are saved in this browser automatically. Use Reset to clear all values.
+          Scores and client name are saved in this browser automatically. Use Reset to clear all values.
         </div>
 
       </div>
@@ -363,7 +390,6 @@
         </p>
 
         <div class="summary">
-
           <div class="summary-card">
             <div class="label">Average Score</div>
             <div class="value" id="avgScore">—</div>
@@ -378,7 +404,6 @@
             <div class="label">Lowest Area</div>
             <div class="value" id="lowScore">—</div>
           </div>
-
         </div>
 
         <div class="chartBox">
@@ -394,7 +419,8 @@
 <script>
 (() => {
 
-  const LS_KEY = "wheel_of_leadership_competencies_v15";
+  const LS_KEY = "wheel_of_leadership_competencies_v16";
+  const CLIENT_KEY = "wheel_of_leadership_client_name_v1";
 
   const COMPETENCIES = [
     "Cultivating High-Performing Teams",
@@ -410,11 +436,13 @@
     "Decision Quality",
     "Influence & Organizational Savvy",
     "Change Management",
-    "Other"
+    "Other",
+    "N/A"
   ];
 
   const DEFAULT_ROWS = COMPETENCIES.slice(0, 10);
 
+  const clientName = document.getElementById("clientName");
   const scoreRows = document.getElementById("scoreRows");
   const avgScore = document.getElementById("avgScore");
   const highScore = document.getElementById("highScore");
@@ -422,7 +450,14 @@
 
   const addRowBtn = document.getElementById("addRowBtn");
   const downloadBtn = document.getElementById("downloadBtn");
+  const pdfBtn = document.getElementById("pdfBtn");
   const resetBtn = document.getElementById("resetBtn");
+
+  clientName.value = localStorage.getItem(CLIENT_KEY) || "";
+
+  clientName.addEventListener("input", () => {
+    localStorage.setItem(CLIENT_KEY, clientName.value);
+  });
 
   function loadState(){
     try{
@@ -442,11 +477,9 @@
   }));
 
   function buildDropdown(selectedValue){
-
     const select = document.createElement("select");
 
     COMPETENCIES.forEach(name => {
-
       const option = document.createElement("option");
 
       option.value = name;
@@ -457,25 +490,20 @@
       }
 
       select.appendChild(option);
-
     });
 
     select.addEventListener("change", updateAll);
 
     return select;
-
   }
 
   function buildTable(){
-
     scoreRows.innerHTML = "";
 
     rows.forEach((row, index) => {
-
       const tr = document.createElement("tr");
 
       const tdRemove = document.createElement("td");
-
       const removeBtn = document.createElement("button");
 
       removeBtn.type = "button";
@@ -483,22 +511,17 @@
       removeBtn.textContent = "×";
 
       removeBtn.addEventListener("click", () => {
-
         rows.splice(index, 1);
-
         buildTable();
         updateAll();
-
       });
 
       tdRemove.appendChild(removeBtn);
 
       const tdCompetency = document.createElement("td");
-
       tdCompetency.appendChild(buildDropdown(row.competency));
 
       const tdScore = document.createElement("td");
-
       const input = document.createElement("input");
 
       input.type = "number";
@@ -516,27 +539,21 @@
       tr.appendChild(tdScore);
 
       scoreRows.appendChild(tr);
-
     });
-
   }
 
   function readRows(){
-
     return Array.from(scoreRows.querySelectorAll("tr")).map(tr => {
-
       const select = tr.querySelector("select");
       const input = tr.querySelector("input");
 
       let value = parseFloat(input.value);
 
       if(Number.isNaN(value)){
-
         return {
           competency:select.value,
           score:""
         };
-
       }
 
       if(value < 1) value = 1;
@@ -548,19 +565,16 @@
         competency:select.value,
         score:value
       };
-
     });
-
   }
 
   function completedRows(){
-
     return rows.filter(row =>
+      row.competency !== "N/A" &&
       row.score !== "" &&
       row.score !== null &&
       !Number.isNaN(Number(row.score))
     );
-
   }
 
   Chart.register(ChartDataLabels);
@@ -568,7 +582,6 @@
   const ctx = document.getElementById("wheelChart").getContext("2d");
 
   const wheelChart = new Chart(ctx, {
-
     type:"radar",
 
     data:{
@@ -589,7 +602,6 @@
     },
 
     options:{
-
       responsive:true,
       maintainAspectRatio:false,
 
@@ -640,7 +652,6 @@
       },
 
       plugins:{
-
         legend:{
           display:false
         },
@@ -671,10 +682,8 @@
           anchor:"end",
 
           align:context => {
-
             const count = context.chart.data.labels.length;
             const index = context.dataIndex;
-
             const angle = (index / count) * 360;
 
             if (angle >= 330 || angle < 30) return "bottom";
@@ -684,7 +693,6 @@
             if (angle >= 210 && angle < 270) return "right";
 
             return "right";
-
           },
 
           offset:10,
@@ -697,27 +705,19 @@
             label:context => `${context.label}: ${context.raw || "No score"}`
           }
         }
-
       }
-
     }
-
   });
 
   function updateSummary(completed){
-
     if(!completed.length){
-
       avgScore.textContent = "—";
       highScore.textContent = "—";
       lowScore.textContent = "—";
-
       return;
-
     }
 
     const total = completed.reduce((sum, row) => sum + Number(row.score), 0);
-
     const avg = total / completed.length;
 
     const highest = completed.reduce((a, b) =>
@@ -729,37 +729,24 @@
     );
 
     avgScore.textContent = avg.toFixed(1);
-
-    highScore.textContent =
-      `${highest.competency} (${highest.score})`;
-
-    lowScore.textContent =
-      `${lowest.competency} (${lowest.score})`;
-
+    highScore.textContent = `${highest.competency} (${highest.score})`;
+    lowScore.textContent = `${lowest.competency} (${lowest.score})`;
   }
 
   function updateAll(){
-
     rows = readRows();
-
     saveState(rows);
 
     const completed = completedRows();
 
-    wheelChart.data.labels =
-      completed.map(row => row.competency);
-
-    wheelChart.data.datasets[0].data =
-      completed.map(row => Number(row.score));
+    wheelChart.data.labels = completed.map(row => row.competency);
+    wheelChart.data.datasets[0].data = completed.map(row => Number(row.score));
 
     wheelChart.update();
-
     updateSummary(completed);
-
   }
 
   function addRow(){
-
     rows = readRows();
 
     rows.push({
@@ -768,55 +755,51 @@
     });
 
     buildTable();
-
     updateAll();
-
   }
 
   function downloadChart(){
-
     const canvas = wheelChart.canvas;
 
     if(canvas.toBlob){
-
       canvas.toBlob(blob => {
-
         if(!blob) return;
 
         const url = URL.createObjectURL(blob);
-
         const a = document.createElement("a");
 
+        const name = clientName.value.trim()
+          ? clientName.value.trim().replace(/\s+/g, "-").toLowerCase()
+          : "client";
+
         a.href = url;
-        a.download = "wheel-of-leadership-competencies.png";
+        a.download = `${name}-wheel-of-leadership-competencies.png`;
 
         document.body.appendChild(a);
-
         a.click();
-
         a.remove();
 
         URL.revokeObjectURL(url);
-
       }, "image/png");
-
     } else {
-
       window.open(canvas.toDataURL("image/png"), "_blank");
-
     }
-
   }
 
   addRowBtn.addEventListener("click", addRow);
-
   downloadBtn.addEventListener("click", downloadChart);
 
-  resetBtn.addEventListener("click", () => {
+  pdfBtn.addEventListener("click", () => {
+    window.print();
+  });
 
-    if(!confirm("Reset all competency scores?")) return;
+  resetBtn.addEventListener("click", () => {
+    if(!confirm("Reset all competency scores and client name?")) return;
 
     localStorage.removeItem(LS_KEY);
+    localStorage.removeItem(CLIENT_KEY);
+
+    clientName.value = "";
 
     rows = DEFAULT_ROWS.map(name => ({
       competency:name,
@@ -824,13 +807,10 @@
     }));
 
     buildTable();
-
     updateAll();
-
   });
 
   buildTable();
-
   updateAll();
 
 })();
